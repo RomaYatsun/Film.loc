@@ -1,9 +1,13 @@
 <?php
 
+/**
+*Implements hook_permission().
+*/
 function my_blocks_permission() {
   return array(
-    'my blocks' => array(
-      'title' => t('weweweewe'),
+    'access my blocks' => array(
+      'title'       => t('Role for my blocks'),
+      'description' => t('Perfom role for my blocks'),
     ),
   );
 }
@@ -26,11 +30,22 @@ function my_blocks_block_view($delta = '') {
   if ($delta == 'my_first_block') {
   	$block['subject'] = t('Block subject');
   	$block['content'] = ('');
-  	$query = db_query('SELECT tid, name FROM {taxonomy_term_data} WHERE vid = 2')->fetchAll(PDO::FETCH_ASSOC);
-
-  	foreach ($query as $tax) {
-  		$block['content'] .= '<a href="?q='. base_path() . 'janry/' .$tax['tid'] .'/' . '">' . $tax['name'] . '</a><br>';
-  	}
+    if (user_access('content')) {
+      $result = db_select('taxonomy_term_data', 't')
+      ->fields('t', array('tid', 'name'))
+      ->condition('vid', 2)
+      ->execute()
+      ->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($result as $tax) {
+      $block['content'] .= '<a href="?q='. base_path() . 'janry/' .$tax['tid'] .'/' . '">' . $tax['name'] . '</a><br>';
+    }
+  }
+  else {
+    $block['subject'] = t('Block subject');
+    $block['content'] = t('Not access');
+  }
+    
   }
   return $block;
 }
