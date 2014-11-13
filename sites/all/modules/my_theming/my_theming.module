@@ -1,0 +1,140 @@
+<?php
+
+
+/**
+ *Implements hook_menu().
+ */
+function my_theming_menu() {
+  $items = array();
+  $items['my-page-of-theming'] = array(
+    'title'            => 'My page of theming',
+    'page callback'    => 'my_first_pagesss',
+    'access callback'  => TRUE,
+    'type'             => MENU_NORMAL_ITEM,
+    'menu_name'        => 'main-menu',
+  );
+ 
+  return $items;
+}
+
+
+/**
+ *Implements hook_theme().
+ */
+function my_theming_theme() {
+  return array(
+    'my_custom_template' => array(
+      'template' => 'custom-template',
+    ),
+    'my_theming_template' => array(
+      'varaibles' => array(
+        'body' => NULL,
+        'title' => NULL,
+      ),
+    ),
+  );
+}
+
+function theme_my_theming_template($var) {
+  $output = '<div class="custom-template-wrapper">';
+  $output .=    '<div class="body">';
+  $output .=      $var['body'];
+  $output .=    '</div>';
+  $output .=    '<div class="title">';
+  $output .=      $var['title'];
+  $output .=    '</div>';
+  $output .= '</div>';
+
+  return $output;
+}
+/**
+ *Function my_first_pages.
+ */
+function my_first_pagesss() {
+  $header = array(
+    array('data' => t('Header cell1')),
+    array('data' => t('Header cell2')),
+    array('data' => t('Header cell3'))
+  );
+  $rows[] = array(
+    array('data' => t('Row 1 – Cell 1')),
+    array('data' => t('Row 1 – Cell 2')),
+    array('data' => t('Row 1 – Cell 3'))  
+  );
+  $rows[] = array( 
+    array('data' => t('Row 2 – Cell 1')), 
+    array('data' => t('Row 2 – Cell 2')),
+    array('data' => t('Row 2 – Cell 3'))
+  );
+
+  return '<h2><strong>' . theme('my_custom_template') . '</strong></h2>' 
+                        . theme('my_theming_template', array('body' => 'Some body', 'title' => 'Some title')) 
+                        . theme('table', array('header' => $header, 'rows'=> $rows))
+                        . theme('item_list', array(
+                          'items' => array(array(
+    'data' => 'Item 1',
+    'children' => array(
+      array(
+        'data' => 'Item 1.1',
+        'children' => array(
+          l('Item 1.1.1','dsdsdsd'),
+          l('Item 1.1.2','ds'),
+        )
+      ),
+      array(
+        'data' => 'Item 1.2',
+        'children' => array(
+          'Item 1.2.1',
+          'Item 1.2.2'
+        )
+      )
+    )
+  ),),
+                          'type' => 'ol',
+    'attributes' => array('id' => 'list-test'),
+    )
+  );
+                        
+}
+
+/*function my_first_pagess() {
+$title = t('My List');
+$type = 'ul';
+// The type of list to return (e.g. "ul", "ol").
+$attributes = array(
+  'id' => 'my-list',
+  'class' => 'custom-class another-custom-class',
+);
+ 
+$items = array(
+  '0' => array(
+    'data' => 'Item 1',
+    'id' => 'item_1',
+    'class' => array('item-1')
+  ),
+  '1' => array(
+    'data' => 'Item 2',
+    'id' => 'item_2',
+    'class' => array('item-2'),
+    'children' => array(
+      '0' => array(
+        'data' => 'Sub Item 1',
+        'id' => 'sub_1',
+        'class' => array('sub-item-1')
+      ),
+      '1' => array(
+        'data' => 'Sub Item 2',
+        'id' => 'sub_2',
+        'class' => array('sub-item-2')
+      ),
+    ),
+  ),
+  '2' => array(
+    'data' => 'Item 3',
+    'id' => 'item_3',
+    'class' => array('item-3')
+  ),
+);
+return theme_item_list(array('items' => $items, 'title' => $title, 'type' => $type, 'attributes' => $attributes));
+//- See more at: http://redcrackle.com/blog/how-create-custom-item-list-drupal-7#sthash.rf8fVhPd.dpuf
+}*/
