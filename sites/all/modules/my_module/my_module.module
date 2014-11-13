@@ -1,69 +1,113 @@
 <?php
+
+
 /**
-*Implements hook_permission().
-*/
+ *Implements hook_permission().
+ */
 function my_module_permission() {
+
   return array(
-    'access my module' => array(
+    'access content' => array(
       'title'       => t('Role for my module'),
       'description' => t('Perfom role for my module'),
     ),
   );
 }
+
+
 /**
-*Implements hook_menu().
-*/
+ *Implements hook_menu().
+ */
 function my_module_menu() {
   $items = array();
   $items['my-page'] = array(
     'title'            => 'My page',
+    'page callback'    => 'my_first_pages',
+    'access arguments' => array('access content'),
+    'type'             => MENU_NORMAL_ITEM,
+    'menu_name'        => 'main-menu',
+    'weight'           => -50,
+  );
+  $items['my-page/%'] = array(
+    'title'            => 'My page',
+    'title callback'   => 'page_title',
+    'title arguments'  => array(1),
     'page callback'    => 'my_first_page',
-    'access arguments' => array('access my module'),
-    'type' => MENU_NORMAL_ITEM,
-  	'menu_name' => 'main-menu',
-    );
+    'page arguments'   => array(1),
+    'access arguments' => array('access content'),
+    'type'             => MENU_NORMAL_ITEM,
+  	'menu_name'        => 'main-menu',
+  );
   $items['my-second'] = array(
-  	'title' => 'My second page',
-  	'page callback' => 'my_second',
-  	'access arguments' => array('access my module'),
-  	'type' => MENU_NORMAL_ITEM,
-  	'menu_name' => 'main-menu',
-  	);
+  	'title'            => 'My second page',
+  	'page callback'    => 'my_second',
+  	'access arguments' => array('access content'),
+  	'type'             => MENU_NORMAL_ITEM,
+  	'menu_name'        => 'main-menu',
+  );
 
   return $items;
 }
 
+
 /**
-*Function my_first_page.
-*/
-function my_first_page() {
-  return t('4dfsgsdfgsdf04');
+ *Function my_first_pages.
+ */
+function my_first_pages() {
+  return t('404');
 }
+
+
 /**
-*Function my_first_page.
-*/
+ *Function my_first_page.
+ */
+function my_first_page($arg) {
+
+  return t('Page with dynamic title');
+}
+
+
+/**
+ *Function page_title.
+ */
+function page_title($arg) {
+
+  return $arg;
+}
+
+
+/**
+ *Function my_first_page.
+ */
 function my_second() {
+
   return t('403');
 }
 
+
+/**
+ *Implements block_info().
+ */
 function my_module_block_info() {
   $blocks = array();
   $blocks['my_second_block'] = array(
   	'info' => t('My second custom block'),
   	'cache' => DRUPAL_CACHE_PER_ROLE,
-  	);
+  );
+
   return $blocks;
 }
 
+
 /**
-*Implements hook_block_view().
-*/
+ *Implements hook_block_view().
+ */
 function my_module_block_view($delta = '') {
   $block = array();
   switch ($delta) {
   	case 'my_second_block':
   	  $block['subject'] = t('Block subject');
-  	  if (user_access('content')) {
+  	  if (user_access('access content')) {
   	  	$block['content'] = t('sdfsdfsdf');
   	  }
   	  else {
@@ -74,4 +118,4 @@ function my_module_block_view($delta = '') {
 
   return $block;
 }
-?>
+
