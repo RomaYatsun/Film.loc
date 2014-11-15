@@ -1,0 +1,5 @@
+; &Id:$
+name = Custom Form
+description = this is my module of custom form
+version = 7.x-dev
+core = 7.x

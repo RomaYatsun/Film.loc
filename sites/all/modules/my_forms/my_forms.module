@@ -1,0 +1,90 @@
+<?php
+
+
+/**
+ *Implements hook_menu().
+ */
+function my_forms_menu() {
+  $items = array();
+  $items['custom-contacts'] = array(
+    'title'            => t('Contacts'),
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   =>array('my_forms_page_form'),
+    'access callback'  => TRUE,
+    'type'             => MENU_NORMAL_ITEM,
+    'menu_name'        => 'main-menu',
+    'weight'           => 10,
+  );
+
+  return $items;
+}
+
+
+/**
+ *Define form.
+ */
+function my_forms_page_form($form, $form_state) {
+  $form['name'] = array(
+    '#title' => t('Your name'),
+    '#type' => 'textfield',
+    '#description' => t('Please enter your name'),
+  );
+  $form['lastname'] = array(
+    '#title' => t('Your lastname'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#description' => t('Please enter your lastname'),
+  );
+  $form['nikname'] = array(
+    '#title' => t('Your name'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#description' => t('Please enter your nikname'),
+  );
+  $form['email'] = array(
+    '#title' => t('Your e-mail'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#description' => t('Please enter your e-mail'),
+  );
+  $form['number'] = array(
+    '#title' => t('Your tel. number'),
+    '#type' => 'textfield',
+    '#description' => t('Please enter your telephone number'),
+  );
+  $form['genre'] = array(
+    '#title' => t('Your genre'),
+    '#type' => 'radios',
+    '#options' => array(t('Female'), t('Male')),
+  );
+  $form['country'] = array(
+    '#title' => t('Your country'),
+    '#type' => 'select',
+    '#options' => array(t('Ukraine'), t('Russia'), t('USA')),
+  );
+  $form['message'] = array(
+    '#title' => t('Your message'),
+    '#type' => 'textarea',
+    '#required' => TRUE,
+    '#options' => array(t('Ukraine'), t('Russia'), t('USA')),
+  );
+  $form['agree'] = array(
+    '#title' => t('I agree'),
+    '#type' => 'checkbox',
+    '#required' => TRUE,
+    '#options' => array(t('Ukraine'), t('Russia'), t('USA')),
+  );
+  $form['custom_text'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contact settings'),
+    '#weight' => 5,
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send'),
+  );
+
+  return $form;
+}
