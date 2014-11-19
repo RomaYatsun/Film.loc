@@ -23,7 +23,7 @@ function my_forms_menu() {
 /**
  *Define form.
  */
-function my_forms_page_form($form, $form_state) {
+function my_forms_page_form($form, &$form_state) {
   $form['name'] = array(
     '#title' => t('Your name'),
     '#type' => 'textfield',
@@ -35,7 +35,7 @@ function my_forms_page_form($form, $form_state) {
     '#required' => TRUE,
     '#description' => t('Please enter your lastname'),
   );
-  $form['nikname'] = array(
+  $form['nickname'] = array(
     '#title' => t('Your name'),
     '#type' => 'textfield',
     '#required' => TRUE,
@@ -66,7 +66,6 @@ function my_forms_page_form($form, $form_state) {
     '#title' => t('Your message'),
     '#type' => 'textarea',
     '#required' => TRUE,
-    '#options' => array(t('Ukraine'), t('Russia'), t('USA')),
   );
   $form['agree'] = array(
     '#title' => t('I agree'),
@@ -74,17 +73,51 @@ function my_forms_page_form($form, $form_state) {
     '#required' => TRUE,
     '#options' => array(t('Ukraine'), t('Russia'), t('USA')),
   );
-  $form['custom_text'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Contact settings'),
-    '#weight' => 5,
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Send'),
   );
 
   return $form;
+}
+
+
+
+/**
+ * Validate function.
+ */
+function my_forms_page_form_validate($form, &$form_state) {
+  if (!filter_var($form_state['values']['email'], FILTER_VALIDATE_EMAIL)) {
+    form_set_error($form_state['values']['email'], 'E-mail is no correct');
+  }
+  elseif (!filter_var($form_state['values']['number'], FILTER_VALIDATE_INT)) {
+    form_set_error($form_state['values']['number'], 'The phone number is not correct');
+  }
+}
+
+
+/**
+ * Submit function/
+ */
+function my_forms_page_form_submit($form, &$form_state) {
+  debug($form_state['values']);
+}
+
+
+/**
+ * My submit function 
+ */
+function test_submit($form, &$form_state) {
+drupal_set_message(t('some text'), 'error');
+}
+
+
+/**
+ *Implements hook_form_alter().
+ */
+function my_forms_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'search_block_form') {
+    $form['search_block_form']['#type'] = 'checkbox';
+    $form['#submit'][] = 'test_submit';
+  }
 }
